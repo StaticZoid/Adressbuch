@@ -15,6 +15,7 @@ namespace Adressbuch
             string Name = "";
             string Vorname = "";
             string Straße = "";
+
             int Hausnummer;
             int zeile = 0;
             // The connection string assumes that the Access 
@@ -46,31 +47,40 @@ namespace Adressbuch
                 // Create and execute the DataReader, writing the result
                 // set to the console window.
                 int auswahl = 0;
+
                 while (true)
                 {
                     Console.WriteLine("Bitte Wähle aus: ");
                     Console.WriteLine("(1) Datensätze anzeigen");
                     Console.WriteLine("(2) Datensätze anlegen");
                     Console.WriteLine("(3) Datensätze löschen");
+                    Console.WriteLine("(4) Programm beenden");
                     Console.WriteLine("=========================");
+                    Console.Write("Gebe eine der oberen Zahlen ein: ");
                     auswahl = Convert.ToInt32(Console.ReadLine());
+                    Console.WriteLine("");
 
+     
                     if (auswahl == 1)
                     {
                         try
                         {
                             connection.Open();
                             OleDbDataReader reader = command.ExecuteReader();
+                            Console.WriteLine("\t[ID]  \tName, Vorname\t | Straße Nr.");
+                            Console.WriteLine("\t===================================================");
                             while (reader.Read())
                             {
-                                Console.WriteLine("\t{0}\t\t{1}\t\t{2}\t{3}\t{4}",
+                                Console.WriteLine("\t[{0}]  \t{1}, {2}\t | {3} {4}",
                                     reader[0], reader[1], reader[2], reader[3], reader[4]);
+                                Console.WriteLine("");
                             }
                             reader.Close();
                         }
                         catch
                         {
                             Console.WriteLine("Datenbank verbindung konnte nicht hergestellt werden.");
+                            Console.WriteLine("");
                         }
                         
                     }
@@ -101,12 +111,14 @@ namespace Adressbuch
                             insertcmd.ExecuteNonQuery();
 
                             Console.WriteLine("Datenbank aktualisiert");
+                            Console.WriteLine("");
 
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine("Probleme beim einfügen der Daten: ");
                             Console.WriteLine(ex.ToString());
+                            Console.WriteLine("");
                         }
                     }
                     if (auswahl == 3)
@@ -114,6 +126,17 @@ namespace Adressbuch
                         try
                         {
                             connection.Open();
+                            OleDbDataReader reader = command.ExecuteReader();
+                            Console.WriteLine("\t[ID]  \tName, Vorname\t | Straße Nr.");
+                            Console.WriteLine("\t===================================================");
+                            while (reader.Read())
+                            {
+                                Console.WriteLine("\t[{0}]  \t{1}, {2}\t | {3} {4}",
+                                    reader[0], reader[1], reader[2], reader[3], reader[4]);
+                                Console.WriteLine("");
+                            }
+                            reader.Close();
+
                             Console.Write("Gebe die ID des Datensatzes an den du löschen möchtest: ");
                             zeile = Convert.ToInt32(Console.ReadLine());
                             OleDbCommand deletecmd = connection.CreateCommand();
@@ -122,7 +145,8 @@ namespace Adressbuch
                             deletecmd.ExecuteNonQuery();
 
                             {
-                                Console.WriteLine("Löschen von Zeile " + zeile + " erfolgrech.");
+                                Console.WriteLine("Löschen vom Eintrag mit der [ID] " + zeile + " erfolgrech.");
+                                Console.WriteLine("");
                             }
 
                         }
@@ -130,10 +154,23 @@ namespace Adressbuch
                         {
                             Console.WriteLine("Da ist wohl etwas schiefgelaufen: ");
                             Console.WriteLine(e.Message);
+                            Console.WriteLine("");
                         }
+                    }
+                    if (auswahl == 4)
+                    {
+                        return;
                     }
                     connection.Close();
                 }
+                
+                //Life motto
+                //if (sad() == true)
+                //{
+                //  sad().stop();
+                //  beAwesome();
+                //}
+
             }
 
             Console.ReadLine();

@@ -40,7 +40,7 @@ namespace Adressbuch
             string Name = "";
             string Vorname = "";
             string Straße = "";
-            string Hausnummer = "";
+            int Hausnummer;
             // The connection string assumes that the Access 
             // Northwind.mdb is located in the c:\Data folder.
             string connectionString =
@@ -108,20 +108,22 @@ namespace Adressbuch
                         Console.Write("Bitte gebe deine Straße an: ");
                         Straße = Convert.ToString(Console.ReadLine());
                         Console.Write("Bitte gebe deine Hausnummer an: ");
-                        Hausnummer = Convert.ToString(Console.ReadLine());
+                        Hausnummer = Convert.ToInt32(Console.ReadLine());
 
-                        String insertString =
-                        @"INSERT INTO Adressbuch(Name, Vorname, Straße, Hausnummer)
-                        VALUES('" + Name + "','" + Vorname + "','" + Straße + "','" + Hausnummer + "')";
-                        OleDbCommand cmd = new OleDbCommand(insertString, connection);
+                        const string insertString = @"INSERT INTO Adressbuch(Name, Vorname, Straße, Hausnummer) VALUES(@Name,@Vorname,@Strasse,@Hausnummer)";
+                        var cmd = new OleDbCommand(insertString, connection);
+                        cmd.Parameters.AddWithValue("@Name", Name);
+                        cmd.Parameters.AddWithValue("@Vorname", Vorname);
+                        cmd.Parameters.AddWithValue("@Straße", Straße);
+                        cmd.Parameters.AddWithValue("@Hausnummer", Hausnummer);
                         cmd.ExecuteNonQuery();
 
                         Console.WriteLine("Datenbank aktualisiert");
                        
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Console.WriteLine("Datenbank verbindung konnte nicht hergestellt werden.");
+                        Console.WriteLine("probleme beim einfügen der daten: "+ex.ToString());
                     }
                 }
 

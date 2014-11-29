@@ -37,10 +37,10 @@ namespace Adressbuch
             Console.WriteLine("(3) Datensatz löschen");*/
         static void Main()
         {
-            string name = "";
-            string vorname = "";
-            string straße = "";
-            int hausnummer = 0;
+            string Name = "";
+            string Vorname = "";
+            string Straße = "";
+            int Hausnummer = 0;
             // The connection string assumes that the Access 
             // Northwind.mdb is located in the c:\Data folder.
             string connectionString =
@@ -84,37 +84,44 @@ namespace Adressbuch
                         OleDbDataReader reader = command.ExecuteReader();
                         while (reader.Read())
                         {
-                            Console.WriteLine("\t{0}\t{1}\t{2}\t{3}\t{4}",
+                            Console.WriteLine("\t{0}\t\t{1}\t\t{2}\t{3}\t{4}",
                                 reader[0], reader[1], reader[2], reader[3], reader[4]);
                         }
                         reader.Close();
                     }
-                    catch (Exception ex)
+                    catch
                     {
-                        Console.WriteLine(ex.Message);
+                        Console.WriteLine("Datenbank verbindung konnte nicht hergestellt werden.");
                     }
                 }
 
 
                 if (auswahl == 2)
                 {
-                    Console.Write("Bitte Gebe deinen Nachnamen an: ");
-                    name = Convert.ToString(Console.ReadLine());
-                    Console.Write("Bitte gebe deinen Vornamen an: ");
-                    vorname = Convert.ToString(Console.ReadLine());
-                    Console.Write("Bitte gebe deine Straße an: ");
-                    straße = Convert.ToString(Console.ReadLine());
-                    Console.Write("Bitte gebe deine Hausnummer an: ");
-                    hausnummer = Convert.ToInt32(Console.ReadLine());
-
-
+                    try
+                    {
                         connection.Open();
-                        String insertString =
-                        @"INSERT INTO Adresbuch(Name, Vorname, Straße, Hausnummer)
-                    VALUES(" + name + ",'" + vorname + "'," + straße + ",'" + hausnummer + "')";
-
+                        Console.Write("Bitte Gebe deinen Nachnamen an: ");
+                        Name = Convert.ToString(Console.ReadLine());
+                        Console.Write("Bitte gebe deinen Vornamen an: ");
+                        Vorname = Convert.ToString(Console.ReadLine());
+                        Console.Write("Bitte gebe deine Straße an: ");
+                        Straße = Convert.ToString(Console.ReadLine());
+                        Console.Write("Bitte gebe deine Hausnummer an: ");
+                        Hausnummer = Convert.ToInt32(Console.ReadLine());
+                            
+                            String insertString =
+                            @"INSERT INTO Adresbuch(Name, Vorname, Straße, Hausnummer)
+                        VALUES(" + Name + ",'" + Vorname + "'," + Straße + ",'" + Hausnummer + "')";
+                            OleDbCommand cmd = new OleDbCommand(insertString, connection);
+                        
                         Console.WriteLine("Datenbank aktualisiert");
-                   }
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Datenbank verbindung konnte nicht hergestellt werden.");
+                    }
+                }
 
             }
 

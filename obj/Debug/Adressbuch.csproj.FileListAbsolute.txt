@@ -1,0 +1,6 @@
+C:\Users\Sven\Documents\GitHub\Adressbuch\Adressbuch\Adressbuch\bin\Debug\Adressbuch.exe.config
+C:\Users\Sven\Documents\GitHub\Adressbuch\Adressbuch\Adressbuch\bin\Debug\Adressbuch.exe
+C:\Users\Sven\Documents\GitHub\Adressbuch\Adressbuch\Adressbuch\bin\Debug\Adressbuch.pdb
+C:\Users\Sven\Documents\GitHub\Adressbuch\Adressbuch\Adressbuch\obj\Debug\Adressbuch.csprojResolveAssemblyReference.cache
+C:\Users\Sven\Documents\GitHub\Adressbuch\Adressbuch\Adressbuch\obj\Debug\Adressbuch.exe
+C:\Users\Sven\Documents\GitHub\Adressbuch\Adressbuch\Adressbuch\obj\Debug\Adressbuch.pdb

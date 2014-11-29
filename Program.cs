@@ -40,7 +40,7 @@ namespace Adressbuch
             string Name = "";
             string Vorname = "";
             string Straße = "";
-            int Hausnummer = 0;
+            string Hausnummer = "";
             // The connection string assumes that the Access 
             // Northwind.mdb is located in the c:\Data folder.
             string connectionString =
@@ -108,14 +108,16 @@ namespace Adressbuch
                         Console.Write("Bitte gebe deine Straße an: ");
                         Straße = Convert.ToString(Console.ReadLine());
                         Console.Write("Bitte gebe deine Hausnummer an: ");
-                        Hausnummer = Convert.ToInt32(Console.ReadLine());
-                            
-                            String insertString =
-                            @"INSERT INTO Adresbuch(Name, Vorname, Straße, Hausnummer)
-                        VALUES(" + Name + ",'" + Vorname + "'," + Straße + ",'" + Hausnummer + "')";
-                            OleDbCommand cmd = new OleDbCommand(insertString, connection);
-                        
+                        Hausnummer = Convert.ToString(Console.ReadLine());
+
+                        String insertString =
+                        @"INSERT INTO Adressbuch(Name, Vorname, Straße, Hausnummer)
+                        VALUES('" + Name + "','" + Vorname + "','" + Straße + "','" + Hausnummer + "')";
+                        OleDbCommand cmd = new OleDbCommand(insertString, connection);
+                        cmd.ExecuteNonQuery();
+
                         Console.WriteLine("Datenbank aktualisiert");
+                       
                     }
                     catch
                     {
@@ -129,4 +131,3 @@ namespace Adressbuch
         }
     }
 }
-

@@ -10,37 +10,13 @@ namespace Adressbuch
 {
     class Program
     {
-        /*static void Main()
-        {
-            bool bconn = true;
-            while (bconn == true)
-            {
-                try
-                {
-                    OleDbConnection conn = new OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=..\\..\\Adressbuch.mdb");
-                    conn.Open();
-                    Console.WriteLine("Verbindung wird versucht hergestellt...");
-                    bconn = false;
-                }
-                catch
-                {
-                    Console.WriteLine("Verbindung konnte NICHT hergestellt...");
-                }
-            }
-            Console.WriteLine("...");
-            Console.WriteLine("Die Verbindung zur Datenbank wurde erfolgreich hergestellt.");
-            Console.WriteLine("");
-            Console.WriteLine("Was möchtest du tun?");
-            Console.WriteLine("");
-            Console.WriteLine("(1) Datensätze anzeigen");
-            Console.WriteLine("(2) Datensatz hinzufügen");
-            Console.WriteLine("(3) Datensatz löschen");*/
         static void Main()
         {
             string Name = "";
             string Vorname = "";
             string Straße = "";
             int Hausnummer;
+            int zeile = 0;
             // The connection string assumes that the Access 
             // Northwind.mdb is located in the c:\Data folder.
             string connectionString =
@@ -70,63 +46,94 @@ namespace Adressbuch
                 // Create and execute the DataReader, writing the result
                 // set to the console window.
                 int auswahl = 0;
-                Console.WriteLine("Bitte Wähle aus: ");
-                Console.WriteLine("(1) Datensätze anzeigen");
-                Console.WriteLine("(2) Datensätze anlegen");
-                Console.WriteLine("=========================");
-                auswahl = Convert.ToInt32(Console.ReadLine());
-
-                if (auswahl == 1)
+                while (true)
                 {
-                    try
+                    Console.WriteLine("Bitte Wähle aus: ");
+                    Console.WriteLine("(1) Datensätze anzeigen");
+                    Console.WriteLine("(2) Datensätze anlegen");
+                    Console.WriteLine("(3) Datensätze löschen");
+                    Console.WriteLine("=========================");
+                    auswahl = Convert.ToInt32(Console.ReadLine());
+
+                    if (auswahl == 1)
                     {
-                        connection.Open();
-                        OleDbDataReader reader = command.ExecuteReader();
-                        while (reader.Read())
+                        try
                         {
-                            Console.WriteLine("\t{0}\t\t{1}\t\t{2}\t{3}\t{4}",
-                                reader[0], reader[1], reader[2], reader[3], reader[4]);
+                            connection.Open();
+                            OleDbDataReader reader = command.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                Console.WriteLine("\t{0}\t\t{1}\t\t{2}\t{3}\t{4}",
+                                    reader[0], reader[1], reader[2], reader[3], reader[4]);
+                            }
+                            reader.Close();
                         }
-                        reader.Close();
+                        catch
+                        {
+                            Console.WriteLine("Datenbank verbindung konnte nicht hergestellt werden.");
+                        }
+                        
                     }
-                    catch
+
+
+                    if (auswahl == 2)
                     {
-                        Console.WriteLine("Datenbank verbindung konnte nicht hergestellt werden.");
+                        try
+                        {
+                            connection.Open();
+                            Console.Write("Bitte Gebe deinen Nachnamen an: ");
+
+                            Name = Convert.ToString(Console.ReadLine());
+
+                            Console.Write("Bitte gebe deinen Vornamen an: ");
+                            Vorname = Convert.ToString(Console.ReadLine());
+                            Console.Write("Bitte gebe deine Straße an: ");
+                            Straße = Convert.ToString(Console.ReadLine());
+                            Console.Write("Bitte gebe deine Hausnummer an: ");
+                            Hausnummer = Convert.ToInt32(Console.ReadLine());
+
+                            const string insertString = @"INSERT INTO Adressbuch(Name, Vorname, Straße, Hausnummer) VALUES(@Name,@Vorname,@Strasse,@Hausnummer)";
+                            var insertcmd = new OleDbCommand(insertString, connection);
+                            insertcmd.Parameters.AddWithValue("@Name", Name);
+                            insertcmd.Parameters.AddWithValue("@Vorname", Vorname);
+                            insertcmd.Parameters.AddWithValue("@Straße", Straße);
+                            insertcmd.Parameters.AddWithValue("@Hausnummer", Hausnummer);
+                            insertcmd.ExecuteNonQuery();
+
+                            Console.WriteLine("Datenbank aktualisiert");
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Probleme beim einfügen der Daten: ");
+                            Console.WriteLine(ex.ToString());
+                        }
                     }
+                    if (auswahl == 3)
+                    {
+                        try
+                        {
+                            connection.Open();
+                            Console.Write("Gebe die ID des Datensatzes an den du löschen möchtest: ");
+                            zeile = Convert.ToInt32(Console.ReadLine());
+                            OleDbCommand deletecmd = connection.CreateCommand();
+
+                            deletecmd.CommandText = "DELETE FROM Adressbuch WHERE ID = " + zeile;
+                            deletecmd.ExecuteNonQuery();
+
+                            {
+                                Console.WriteLine("Löschen von Zeile " + zeile + " erfolgrech.");
+                            }
+
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Da ist wohl etwas schiefgelaufen: ");
+                            Console.WriteLine(e.Message);
+                        }
+                    }
+                    connection.Close();
                 }
-
-
-                if (auswahl == 2)
-                {
-                    try
-                    {
-                        connection.Open();
-                        Console.Write("Bitte Gebe deinen Nachnamen an: ");
-                        Name = Convert.ToString(Console.ReadLine());
-                        Console.Write("Bitte gebe deinen Vornamen an: ");
-                        Vorname = Convert.ToString(Console.ReadLine());
-                        Console.Write("Bitte gebe deine Straße an: ");
-                        Straße = Convert.ToString(Console.ReadLine());
-                        Console.Write("Bitte gebe deine Hausnummer an: ");
-                        Hausnummer = Convert.ToInt32(Console.ReadLine());
-
-                        const string insertString = @"INSERT INTO Adressbuch(Name, Vorname, Straße, Hausnummer) VALUES(@Name,@Vorname,@Strasse,@Hausnummer)";
-                        var cmd = new OleDbCommand(insertString, connection);
-                        cmd.Parameters.AddWithValue("@Name", Name);
-                        cmd.Parameters.AddWithValue("@Vorname", Vorname);
-                        cmd.Parameters.AddWithValue("@Straße", Straße);
-                        cmd.Parameters.AddWithValue("@Hausnummer", Hausnummer);
-                        cmd.ExecuteNonQuery();
-
-                        Console.WriteLine("Datenbank aktualisiert");
-                       
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("probleme beim einfügen der daten: "+ex.ToString());
-                    }
-                }
-
             }
 
             Console.ReadLine();
